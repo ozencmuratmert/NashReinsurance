@@ -63,7 +63,8 @@ subplot(1,2,1);
 plot(t, X, 'k', t, CI, 'b', t, CR, 'r', t, PremI, 'g--', 'LineWidth', 1.1); grid on;
 yline_(ks); xlabel('Time (years)'); ylabel('Amount');
 xlim([0 P.T]); lg = legend('X(t)','C_I(t)','C_R(t)','\Pi_{I,t}','k^*','Location','southoutside','Orientation','horizontal');
-try, lg.NumColumns = 3; catch, end   % two rows, so the legend fits under the panel title('Full year');
+try, lg.NumColumns = 3; catch, end   % two-row legend fits under the panel
+ title('Full year');
 subplot(1,2,2); id = t <= 0.3;
 plot(t(id), X(id), 'k', t(id), CI(id), 'b', t(id), CR(id), 'r', t(id), PremI(id), 'g--', 'LineWidth', 1.1);
 grid on; yline_(ks); xlim([0 0.3]); xlabel('Time (years)'); title('First 0.3 years');
@@ -95,7 +96,8 @@ f = figure('Visible','off', 'Position', [100 100 1100 420]);
 subplot(1,2,1); plot(t, X, 'k', t, CI, 'b', t, CR, 'r', 'LineWidth', 1.1); grid on;
 yline_(kL); yline_(mL, 'k-.'); xlabel('Time (years)'); ylabel('Amount');
 xlim([0 P.T]); lg = legend('X(t)','C_I(t)','C_R(t)','k^*','m^*','Location','southoutside','Orientation','horizontal');
-try, lg.NumColumns = 3; catch, end   % two rows, so the legend fits under the panel title('Full year');
+try, lg.NumColumns = 3; catch, end   % two-row legend fits under the panel
+ title('Full year');
 subplot(1,2,2); id = t <= 0.3;
 plot(t(id), X(id), 'k', t(id), CI(id), 'b', t(id), CR(id), 'r', 'LineWidth', 1.1); grid on;
 xlim([0 0.3]); xlabel('Time (years)'); title('First 0.3 years');
