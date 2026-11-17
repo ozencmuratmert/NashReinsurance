@@ -62,10 +62,11 @@ PremI = (1 + P.theta) * [EIk(1); EIk];   % t = 0 carries the first step's premiu
 subplot(1,2,1);
 plot(t, X, 'k', t, CI, 'b', t, CR, 'r', t, PremI, 'g--', 'LineWidth', 1.1); grid on;
 yline_(ks); xlabel('Time (years)'); ylabel('Amount');
-xlim([0 P.T]); legend('X(t)','C_I(t)','C_R(t)','\Pi_{I,t}','k^*','Location','southoutside','Orientation','horizontal'); title('Full year');
+xlim([0 P.T]); lg = legend('X(t)','C_I(t)','C_R(t)','\Pi_{I,t}','k^*','Location','southoutside','Orientation','horizontal'); title('Full year');
 subplot(1,2,2); id = t <= 0.3;
 plot(t(id), X(id), 'k', t(id), CI(id), 'b', t(id), CR(id), 'r', t(id), PremI(id), 'g--', 'LineWidth', 1.1);
 grid on; yline_(ks); xlim([0 0.3]); xlabel('Time (years)'); title('First 0.3 years');
+center_legend(lg);
 save_fig(f, fdir, 'Figure7_StopLoss_TimeSeries', [7.0 3.4]);
 
 %% Figure 6: limited stop-loss Nash surface
@@ -93,10 +94,11 @@ CI = min(X, kL) + max(X - mL, 0);  CR = min(mL - kL, max(X - kL, 0));
 f = figure('Visible','off', 'Position', [100 100 1100 420]);
 subplot(1,2,1); plot(t, X, 'k', t, CI, 'b', t, CR, 'r', 'LineWidth', 1.1); grid on;
 yline_(kL); yline_(mL, 'k-.'); xlabel('Time (years)'); ylabel('Amount');
-xlim([0 P.T]); legend('X(t)','C_I(t)','C_R(t)','k^*','m^*','Location','southoutside','Orientation','horizontal'); title('Full year');
+xlim([0 P.T]); lg = legend('X(t)','C_I(t)','C_R(t)','k^*','m^*','Location','southoutside','Orientation','horizontal'); title('Full year');
 subplot(1,2,2); id = t <= 0.3;
 plot(t(id), X(id), 'k', t(id), CI(id), 'b', t(id), CR(id), 'r', 'LineWidth', 1.1); grid on;
 xlim([0 0.3]); xlabel('Time (years)'); title('First 0.3 years');
+center_legend(lg);
 save_fig(f, fdir, 'Figure6_Limited_TimeSeries', [7.0 3.4]);
 
 fprintf('Figures written to %s\n', fdir);
@@ -132,4 +134,21 @@ end
 function yline_(y, style)
 if nargin < 2, style = 'k:'; end
 xl = xlim; hold on; plot(xl, [y y], style, 'LineWidth', 1.0); hold off; xlim(xl);
+end
+
+function center_legend(lg)
+% Place a horizontal legend centred across the full figure width, so it is
+% not clipped when it is wider than the left panel, and give both panels
+% the same vertical extent so the legend does not overlap any axis label.
+f  = ancestor(lg, 'figure');
+ax = findobj(f, 'Type', 'axes');
+set(ax, 'Units', 'normalized');  set(lg, 'Units', 'normalized');
+P  = cell2mat(get(ax, 'Position'));
+y0 = max(P(:,2));  y1 = min(P(:,2) + P(:,4));
+for i = 1:numel(ax)
+    p = P(i,:);  p(2) = y0;  p(4) = y1 - y0;  set(ax(i), 'Position', p);
+end
+pos = get(lg, 'Position');
+pos(1) = 0.5 - pos(3)/2;  pos(2) = 0.01;
+set(lg, 'Position', pos);
 end
